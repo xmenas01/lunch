@@ -36,12 +36,9 @@ class LunchTest(TestCase):
     def test_should_return_201_on_restaurant_creation(self):
         # WHEN
         resp = self.client.post(RESTAURANT_URL, self.get_restaurant_payload())
-        # import ipdb; ipdb.set_trace()
 
         # THEN
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        # pk = resp.data["url"][-2]
-        # restaurant = Restaurant.objects.get(pk=pk)
         resp.data.pop("url")
         self.assertTrue(Restaurant.objects.filter(**resp.data).exists())
 
