@@ -1,38 +1,31 @@
-import ipdb
-from django.db import models
-from django.contrib.auth.models import User
 from datetime import date
-from django.db.models import Sum, Count
+
 from constance import config
+from django.contrib.auth.models import User
+from django.db import models
+from django.db.models import Sum, Count
 
 
 class RestaurantManager(models.Manager):
-    def get_scores_by_date(self, date):
-        qs = self.get_queryset().filter(votes__date__lte=date)
-        ann_qs = qs.annotate(score=Sum("votes__points"), unique_users=Count("votes__user", distinct=True))
-        return ann_qs
-
     def get_scores(self):
         qs = self.get_queryset()
         ann_qs = qs.annotate(score=Sum("votes__points", default=0), unique_users=Count("votes__user", distinct=True))
-        # import ipdb; ipdb.set_trace()
+        return ann_qs
+
+    def get_scores_by_date(self, date):
+        qs = self.get_queryset().filter(votes__date__lte=date)
+        ann_qs = qs.annotate(score=Sum("votes__points"), unique_users=Count("votes__user", distinct=True))
         return ann_qs
 
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.CharField(max_length=255, blank=True, null=True)
-    # score = models.DecimalField(max_digits=5, decimal_places=2)
 
     objects = RestaurantManager()
 
-    def get_score_by_date(self, date):
-        return self.votes.filter(date__lte=date).aggregate(Sum("points"))["points__sum"] or 0
-
-    # @property
-    # def score(self):
-    #     today = date.today()
-    #     return self.get_score_by_date(date=today)
+    class Meta:
+        ordering = ("name",)
 
     def __str__(self):
         return self.name
@@ -51,7 +44,6 @@ class UserVoteManager(models.Manager):
             return self.get_queryset().filter(date=today, restaurant=self.instance)
 
     def get_remaining_points(self):
-        # import ipdb;ipdb.set_trace()
         points = self.get_todays_votes().aggregate(Sum("points"))["points__sum"] or 0
         return config.USER_MAX_POINTS - points
 

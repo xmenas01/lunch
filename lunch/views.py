@@ -1,11 +1,11 @@
-from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
+from rest_framework.response import Response
+
+from lunch import filters
 from lunch import models
 from lunch import serializers
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework import filters
-from lunch import filters
 
 
 class ReadOnly(BasePermission):
@@ -27,17 +27,12 @@ class RestaurantViewSet(viewsets.ModelViewSet):
 
         return models.Restaurant.objects.get_scores()
 
-# class RestaurantViewSet(viewsets.ModelViewSet):
-#     queryset = models.Restaurant.objects.all()
-#     serializer_class = serializers.RestaurantSerializer
-#     permission_classes = [IsAuthenticated | ReadOnly]
-#     filterset_class = filters.RestaurantFilter
-#     # ordering = ["-days_score", "-unique_users"]
-#     ordering_fields = "__all__"
-
     @action(detail=True, methods=["get", "post"])
     def vote(self, request, pk=None):
         user = request.user
+
+        if not request.user.is_authenticated:
+            return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "GET":
             points = user.votes.get_remaining_points()

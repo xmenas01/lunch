@@ -1,15 +1,14 @@
-from django.test import TestCase
 import uuid
-from rest_framework.reverse import reverse
-from django.contrib.auth.models import User
-
-from rest_framework.test import APIClient
-from rest_framework import status
-
-from lunch.models import Restaurant, UserVote
 from unittest.mock import ANY
 
+from django.contrib.auth.models import User
+from django.test import TestCase
 from freezegun import freeze_time
+from rest_framework import status
+from rest_framework.reverse import reverse
+from rest_framework.test import APIClient
+
+from lunch.models import Restaurant, UserVote
 
 RESTAURANT_URL = reverse('restaurant-list')
 RESTAURANT_URL_DETAIL = reverse('restaurant-detail', kwargs={"pk": 1})
@@ -33,7 +32,6 @@ class LunchTest(TestCase):
     def prepopulate_db(self):
         for x in range(0, 3):
             Restaurant.objects.create(**self.get_restaurant_payload())
-
 
     def test_should_return_201_on_restaurant_creation(self):
         # WHEN
@@ -78,7 +76,7 @@ class LunchTest(TestCase):
     def test_user_point_reset_next_day(self):
         # GIVEN
         with freeze_time("2022-01-01"):
-            for i in range(0,4):
+            for i in range(0, 4):
                 self.client.post(VOTE_URL)
             self.assertEqual(self.client.get(VOTE_URL).data["remaining_points"], 8)
 
@@ -93,12 +91,12 @@ class LunchTest(TestCase):
         expected_resp = []
         for i in range(1, 4):
             expected_resp.append({
-                                "url": f"http://testserver/restaurant/{i}/",
-                                "score": "0",
-                                "unique_users": "0",
-                                "name": ANY,
-                                "description": ANY
-                            })
+                "url": f"http://testserver/restaurant/{i}/",
+                "score": "0",
+                "unique_users": "0",
+                "name": ANY,
+                "description": ANY
+            })
         self.assertEqual(resp.json(), expected_resp)
 
     def test_should_return_list_by_date(self):

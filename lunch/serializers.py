@@ -1,23 +1,14 @@
-from rest_framework import serializers
-from lunch import models
-from rest_framework.exceptions import ValidationError
 from decimal import Decimal
-from datetime import date
+
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+
+from lunch import models
 
 
 class RestaurantSerializer(serializers.HyperlinkedModelSerializer):
     score = serializers.CharField(read_only=True)
     unique_users = serializers.CharField(read_only=True)
-
-    # def to_representation(self, instance):
-    #     resp = super().to_representation(instance)
-    #     # import ipdb; ipdb.set_trace()
-    #     today = date.today()
-    #     f_date = self.context["request"].query_params.get("by_date", today)
-    #     score = instance.get_score_by_date(date=f_date)
-    #     resp["score"] = str(score)
-    #     return resp
-
 
     class Meta:
         model = models.Restaurant
