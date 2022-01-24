@@ -11,5 +11,6 @@ router.register(r'restaurant', views.RestaurantViewSet, basename="restaurant")
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
+                  path('api-auth/', include('rest_framework.urls')),
                   path('', include(router.urls)),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
