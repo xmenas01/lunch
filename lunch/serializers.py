@@ -12,7 +12,7 @@ class RestaurantSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Restaurant
-        fields = "__all__"
+        fields = ("url", "name", "score", "unique_users", "description")
 
 
 class UserVoteSerializer(serializers.ModelSerializer):
