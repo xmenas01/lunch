@@ -1,7 +1,7 @@
 import uuid
 from unittest.mock import ANY
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.test import TestCase
 from freezegun import freeze_time
 from rest_framework import status
@@ -52,9 +52,27 @@ class LunchTest(TestCase):
             self.assertEqual(resp.status_code, status.HTTP_200_OK)
             self.assertEqual(UserVote.objects.filter(user=self.user).count(), i + 1)
 
+    def test_should_return_403_when_anonymous_user_tries_vote(self):
+
+        # WHEN
+        self.client.force_authenticate(user=AnonymousUser())
+        resp = self.client.get(VOTE_URL)
+
+        # THEN
+        self.assertContains(resp, "Unauthorized", status_code=401)
+
+    def test_should_return_400_when_user_out_of_points(self):
+
+        # WHEN
+        for i in range(0, 16):
+            resp = self.client.post(VOTE_URL)
+
+        # THEN
+        self.assertContains(resp, "out of points", status_code=400)
+
     def test_user_point_calculation_on_diff_restaurants(self):
 
-        user_points = [9, 8.5, 8.25, 8, 7, 6.5, 6.25, 6]
+        user_points = [4, 3.5, 3.25, 3, 2, 1.5, 1.25, 1]
         restaurant_score = [1, 1.5, 1.75, 2]
         k = 0
 
@@ -75,10 +93,10 @@ class LunchTest(TestCase):
         with freeze_time("2022-01-01"):
             for i in range(0, 4):
                 self.client.post(VOTE_URL)
-            self.assertEqual(self.client.get(VOTE_URL).data["remaining_points"], 8)
+            self.assertEqual(self.client.get(VOTE_URL).data["remaining_points"], 3)
 
         # WHEN / THEN
-        self.assertEqual(self.client.get(VOTE_URL).data["remaining_points"], 10)
+        self.assertEqual(self.client.get(VOTE_URL).data["remaining_points"], 5)
 
     def test_should_return_restaurant_list(self):
         # WHEN
