@@ -32,20 +32,34 @@ url: http://localhost:8000/
 > when using Browsable REST API UI.
 >> Pre-created users: admin/peter/tommy, password: superapp
 
-Endpoints:
+### Endpoints:
 
-- */restaurant/* - List of restaurants, supported methods: GET, POST, OPTIONS
-- */restaurant/{pk}/* - Detail restaurant view, GET, PUT, DELETE, OPTIONS
-- */restaurant/{pk}/vote/* - voting endpoint, implemented as action. In order to vote for restaurant, make POST request
+- ``/restaurant/`` - List of restaurants, supported methods: GET, POST, OPTIONS
+- ``/restaurant/{pk}/`` - Detail restaurant view, GET, PUT, DELETE, OPTIONS
+- ``/restaurant/{pk}/vote/`` - voting endpoint, implemented as action. In order to vote for restaurant, make POST request
   to this endpoint.
-- */user_points/* - Remaining user points for the day.
-- */admin/* - Admin site. Only "admin" user has access.
+- ``/user_points/`` - Remaining user points for the day.
+- ``/admin/`` - Admin site. Only "admin" user has access.
 
 Vote counting: Every user gets 5 (configurable) votes per day. First user vote on the same restaurant counts as 1, second
 as 0.5, 3rd and all subsequent votes, as 0.25.
 > Voting over Browsable REST API, choose "Extra Action" > "Vote" when you are in restaurant detail view.
 
-Tests:
+### Ordering:
+
+By default, restaurants are ordered by scores, winner as first record, 2nd place - second record and so on.
+
+Ordering is applicable for all restaurant fields, using ``ordering`` key.
+
+"-" symbol helps to change order to descend. Example: ``/?ordering=-name`` - orders restaurants name in descending order.
+
+### Filters:
+- ``by_date`` - Return restaurant scores at provided date. Example ``/?by_date=2022-01-24``
+- ``name`` - filters out exact restaurant name.
+- ``name__icontains`` - filters out restaurants by the part of the name.
+- ``name_in`` - filters out restaurants by provided list of restaurant names.
+
+### Tests:
 
 App is covered by tests as well, to run them:
 ```bash
