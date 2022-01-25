@@ -26,9 +26,11 @@ We are done, app is running!
 ## Usage
 
 Django REST API comes with "Browsable REST API" UI, that allows more easily to figure out how to use REST API. Local
-url: http://localhost:8000/ - please log in before voting.
+url: http://localhost:8000/
 
-> Pre-created user: admin/peter/tommy, password: superapp
+> Please log in before voting, over basic auth if using REST API client or "Log in" button on top right corner, 
+> when using Browsable REST API UI.
+>> Pre-created users: admin/peter/tommy, password: superapp
 
 Endpoints:
 
@@ -39,10 +41,11 @@ Endpoints:
 - */user_points/* - Remaining user points for the day.
 - */admin/* - Admin site. Only "admin" user has access.
 
-> Voting over Browsable REST API, choose "Extra Action" > Vote when you are in restaurant detail view
-
-Vote count: Every user gets 5 (configurable) votes per day. First user vote on the same restaurant counts as 1, second
+Vote counting: Every user gets 5 (configurable) votes per day. First user vote on the same restaurant counts as 1, second
 as 0.5, 3rd and all subsequent votes, as 0.25.
+> Voting over Browsable REST API, choose "Extra Action" > "Vote" when you are in restaurant detail view.
+
+Tests:
 
 App is covered by tests as well, to run them:
 ```bash
@@ -52,5 +55,5 @@ $ python ./manage.py test
 
 ## Heroku
 
-Running example can be found on: https://lunch-vote01.herokuapp.com/
-> Pre-created user: admin/peter/tommy, password: superapp
+Running example can be found on page: https://lunch-vote01.herokuapp.com/
+> Pre-created users: admin/peter/tommy, password: superapp
