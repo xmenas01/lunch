@@ -31,7 +31,7 @@ class RestaurantViewSet(viewsets.ModelViewSet):
     def vote(self, request, pk=None):
         user = request.user
 
-        if not request.user.is_authenticated:
+        if not user.is_authenticated:
             return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
 
         if request.method == "GET":
@@ -47,3 +47,13 @@ class RestaurantViewSet(viewsets.ModelViewSet):
             return Response({'remaining_points': points})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserPointsViewSet(viewsets.ViewSet):
+    def list(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+
+        points = user.votes.get_remaining_points()
+        return Response({'remaining_points': points})

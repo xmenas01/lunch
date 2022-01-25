@@ -36,12 +36,19 @@ Endpoints:
 - */restaurant/{pk}/* - Detail restaurant view, GET, PUT, DELETE, OPTIONS
 - */restaurant/{pk}/vote/* - voting endpoint, implemented as action. In order to vote for restaurant, make POST request
   to this endpoint.
+- */user_points/* - Remaining user points for the day.
 - */admin/* - Admin site. Only "admin" user has access.
 
 > Voting over Browsable REST API, choose "Extra Action" > Vote when you are in restaurant detail view
 
 Vote count: Every user gets 5 (configurable) votes per day. First user vote on the same restaurant counts as 1, second
 as 0.5, 3rd and all subsequent votes, as 0.25.
+
+App is covered by tests as well, to run them:
+```bash
+$ docker exec -it backend_app_1 bash
+$ python ./manage.py test
+```
 
 ## Heroku
 

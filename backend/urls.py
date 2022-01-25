@@ -8,6 +8,7 @@ from lunch import views
 
 router = routers.DefaultRouter()
 router.register(r'restaurant', views.RestaurantViewSet, basename="restaurant")
+router.register(r'user_points', views.UserPointsViewSet, basename="user_points")
 
 urlpatterns = [
                   path('admin/', admin.site.urls),

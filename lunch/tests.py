@@ -10,10 +10,10 @@ from rest_framework.test import APIClient
 
 from lunch.models import Restaurant, UserVote
 
-RESTAURANT_URL = reverse('restaurant-list')
-RESTAURANT_URL_DETAIL = reverse('restaurant-detail', kwargs={"pk": 1})
+RESTAURANT_URL = reverse("restaurant-list")
+RESTAURANT_URL_DETAIL = reverse("restaurant-detail", kwargs={"pk": 1})
 VOTE_URL = reverse("restaurant-vote", kwargs={"pk": 1})
-
+USER_POINTS = reverse("user_points-list")
 
 class LunchTest(TestCase):
     def setUp(self):
@@ -64,7 +64,7 @@ class LunchTest(TestCase):
     def test_should_return_400_when_user_out_of_points(self):
 
         # WHEN
-        for i in range(0, 16):
+        for i in range(0, 17):
             resp = self.client.post(VOTE_URL)
 
         # THEN
@@ -84,6 +84,8 @@ class LunchTest(TestCase):
 
                 # THEN
                 self.assertEqual(resp.data["remaining_points"], user_points[k])
+                user_points_resp = self.client.get(USER_POINTS)
+                self.assertEqual(user_points_resp.data["remaining_points"], user_points[k])
                 k += 1
                 restaurant_url = reverse("restaurant-detail", kwargs={"pk": pk})
                 self.assertEqual(self.client.get(restaurant_url).data["score"], str(restaurant_score[i]))

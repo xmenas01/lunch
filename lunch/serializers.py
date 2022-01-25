@@ -40,7 +40,7 @@ class UserVoteSerializer(serializers.ModelSerializer):
         user = data["user"]
         user_points = user.votes.get_remaining_points()
 
-        if user_points - Decimal(points) <= 0:
+        if user_points - Decimal(points) < 0:
             raise ValidationError("out of points")
 
         return super().validate(data)
