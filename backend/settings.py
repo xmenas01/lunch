@@ -136,5 +136,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
 CONSTANCE_CONFIG = {
-    'USER_MAX_POINTS': (10, 'User points allowance per day'),
+    'USER_MAX_POINTS': (5, 'User points allowance per day'),
 }
